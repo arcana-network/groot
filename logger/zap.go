@@ -13,6 +13,8 @@ type zapLogger struct {
 }
 
 // NewZap creates a new zap logger instance for specified service, eg. gateway, uploader.
+//nolint: ireturn, exhaustivestruct // We need to return interface to not to expose zap methods.
+// Zap takes care of uninitialized struct fields.
 func NewZap(service string) Logger {
 	cfg := zap.Config{
 		Encoding:         "json",
