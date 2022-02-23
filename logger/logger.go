@@ -1,5 +1,6 @@
 package logger
 
+// Logger exposes all log functions.
 type Logger interface {
 	Info(msg string, fields Field)
 	Debug(msg string, fields Field)
@@ -8,5 +9,5 @@ type Logger interface {
 	Fatal(msg string, fields Field)
 }
 
-// The semi structured log fields
+// The semi structured log fields.
 type Field map[string]interface{}

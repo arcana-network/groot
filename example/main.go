@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/arcana-network/gologger/logger"
 )
 
@@ -89,7 +87,7 @@ func logTest() {
 		"k2.2": "v2.2",
 	})
 
-	fmt.Println(l.GetLogs())
+	l.Info(l.GetLogs(), map[string]interface{}{})
 }
 
 func logFatal() {
