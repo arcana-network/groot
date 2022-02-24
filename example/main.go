@@ -11,7 +11,7 @@ func main() {
 }
 
 func logAllLevels() {
-	log := logger.NewZap("log all levels")
+	log := logger.NewZap("example")
 
 	log.Info("Message1", logger.Field{
 		"k1.1": "v1.1",
@@ -92,7 +92,7 @@ func logTest() {
 
 func logFatal() {
 	// Will panic here
-	log := logger.NewZap("log fatal levels")
+	log := logger.NewZap("exampleFatal")
 	log.Fatal("Message2", logger.Field{
 		"k2.1": "v2.1",
 		"k2.2": "v2.2",
