@@ -14,3 +14,11 @@ You mostly don't have to worry about format of logs, which library we use behind
 
 # Quick start
 - Go through the `example/main.go` to find out how to use groot in your project
+
+
+# Todo
+- Implement log rotation and retention
+- Implement log backups to cold storage
+- Implement sentry logs
+- Implement context based logging
+- Implement HTTP request tracing
