@@ -1,10 +1,21 @@
 package logger
 
 import (
+	"fmt"
 	"log"
+	"net/url"
+	"os"
+	"path"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
+)
+
+const (
+	maxSize    = 512
+	maxAge     = 90
+	maxBackups = 30
 )
 
 // zapLogger wraps the zap logging library to satisfy Logger interface.
@@ -12,14 +23,51 @@ type zapLogger struct {
 	*zap.Logger
 }
 
+type lumberJackSink struct {
+	*lumberjack.Logger
+}
+
+func (lumberJackSink) Sync() error { return nil }
+
 // NewZap creates a new zap logger instance for specified service, eg. gateway, uploader.
 //nolint: ireturn, exhaustivestruct // We need to return interface to not to expose zap methods.
 // Zap takes care of uninitialized struct fields.
 func NewZap(service string) Logger {
+	var baseLocation string
+	if baseLocation = os.Getenv("GROOT_LOG_LOCATION"); baseLocation == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		baseLocation = path.Join(home, "arcana/logs", service)
+	}
+
+	// XXX: Sanitize service string. If the service contains
+	// restricted characters the filesystem won't allow to throw error
+	logFile := path.Join(baseLocation, service+".log")
+
+	ljLogger := lumberjack.Logger{
+		Filename:   logFile,
+		MaxSize:    maxSize,
+		MaxBackups: maxBackups,
+		MaxAge:     maxAge,
+		Compress:   true,
+	}
+
+	err := zap.RegisterSink("lumberjack", func(u *url.URL) (zap.Sink, error) {
+		return lumberJackSink{
+			Logger: &ljLogger,
+		}, nil
+	})
+	if err != nil {
+		log.Panicf("Unable to register lumberjack sync: %s", err)
+	}
+
 	cfg := zap.Config{
 		Encoding:         "json",
 		Level:            zap.NewAtomicLevelAt(zapcore.DebugLevel),
-		OutputPaths:      []string{"stderr"},
+		OutputPaths:      []string{"stdout", fmt.Sprintf("lumberjack:%s", logFile)},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig: zapcore.EncoderConfig{
 			NameKey:      "service",
