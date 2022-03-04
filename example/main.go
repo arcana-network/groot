@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/arcana-network/gologger/logger"
-)
+import "github.com/arcana-network/groot/logger"
 
 func main() {
 	logAllLevels()

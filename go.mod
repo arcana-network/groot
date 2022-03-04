@@ -1,9 +1,9 @@
-module github.com/arcana-network/gologger
+module github.com/arcana-network/groot
 
 go 1.17
 
 require (
-	go.uber.org/zap v1.20.0
+	go.uber.org/zap v1.21.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
 
