@@ -1,8 +1,8 @@
 package logger
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"net/url"
 	"os"
 	"path"
@@ -29,23 +29,27 @@ type lumberJackSink struct {
 
 func (lumberJackSink) Sync() error { return nil }
 
-// NewZap creates a new zap logger instance for specified service, eg. gateway, uploader.
+// newZap creates a new zap logger instance for specified service, eg. gateway, uploader.
 //nolint: ireturn, exhaustivestruct // We need to return interface to not to expose zap methods.
 // Zap takes care of uninitialized struct fields.
-func NewZap(service string) Logger {
+func newZap(s string) (Logger, error) {
+	if s == "" {
+		return nil, errors.New("Service cannot be empty")
+	}
+
 	var baseLocation string
 	if baseLocation = os.Getenv("GROOT_LOG_LOCATION"); baseLocation == "" {
 		home, err := os.UserHomeDir()
 		if err != nil {
-			log.Fatal(err)
+			return &zapLogger{}, err
 		}
 
-		baseLocation = path.Join(home, "arcana/logs", service)
+		baseLocation = path.Join(home, "arcana/logs", s)
 	}
 
 	// XXX: Sanitize service string. If the service contains
 	// restricted characters the filesystem won't allow to throw error
-	logFile := path.Join(baseLocation, service+".log")
+	logFile := path.Join(baseLocation, s+".log")
 
 	ljLogger := lumberjack.Logger{
 		Filename:   logFile,
@@ -61,7 +65,7 @@ func NewZap(service string) Logger {
 		}, nil
 	})
 	if err != nil {
-		log.Panicf("Unable to register lumberjack sync: %s", err)
+		return nil, fmt.Errorf("register lumberjack sync: %w", err)
 	}
 
 	cfg := zap.Config{
@@ -83,12 +87,12 @@ func NewZap(service string) Logger {
 
 	logger, err := cfg.Build(zap.AddCallerSkip(1)) // If we don't skip caller, it will always show the caller as this file
 	if err != nil {
-		log.Panic("Unable to build zap logger")
+		return nil, fmt.Errorf("Config build: %s", err)
 	}
 
 	return &zapLogger{
-		logger.Named(service),
-	}
+		logger.Named(s),
+	}, nil
 }
 
 // Info publishes info level logs.
