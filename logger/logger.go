@@ -11,3 +11,12 @@ type Logger interface {
 
 // The semi structured log fields.
 type Field map[string]interface{}
+
+func NewZapLogger(service string) Logger {
+	z, err := newZap(service)
+	if err != nil {
+		panic(err)
+	}
+
+	return z
+}
