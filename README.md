@@ -16,9 +16,13 @@ You mostly don't have to worry about format of logs, which library we use behind
 - Go through the `example/main.go` to find out how to use groot in your project
 
 
+# Usage
+- Create a logger instance and pass it around to packages. This is a better pattern as it avoids globals. Though this might not be possible if the code is not structured to inject dependencies 
+and heavily rely on globals, for this purpose groot provides a singleton logger
+
 # Todo
-- Implement log rotation and retention
-- Implement log backups to cold storage
-- Implement sentry logs
-- Implement context based logging
-- Implement HTTP request tracing
+- [ ] Implement log rotation and retention
+- [ ] Implement log backups to cold storage
+- [ ] Implement context based logging
+- [ ] Implement HTTP request tracing
+- [ ] Implement sentry logs
