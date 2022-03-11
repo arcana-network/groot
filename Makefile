@@ -18,6 +18,11 @@ build:
 	@echo 'Building binary...'
 	@go install ./... 
 
-test:
-	@echo 'Running tests and reporting to coverage.txt...'
-	@go test -race -coverprofile=coverage.txt ./...
+test-acceptance:
+	@echo 'Running acceptance tests and reporting to coverage.txt...'
+	@go test ./... -v -run TestNewZapLogger 
+	@go test ./... -v -run TestNewZapLoggerEmptyService
+	@go test ./... -v -run TestSinkRepeat
+	@go test ./... -v -run TestFileCreation
+	@go test ./... -v -run TestFileContent
+	@go test ./... -v -run TestFatalLogs
