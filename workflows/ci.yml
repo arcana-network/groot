@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+      - "feature/*"
+  push:
+    branches:
+      - dev
+      - main
+      - "feature/*"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Run Linter
+        uses: golangci/golangci-lint-action@v2
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Go tests
+        run: make test-acceptance
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies and build
+        run: make build
+
+  branch-name:
+    runs-on: ubuntu-latest
+    name: Check branch name
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: '\w+\/(?:feature-|hotfix-)?AR-\d+-.+'
+          ignore: main,dev
