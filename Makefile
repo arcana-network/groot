@@ -18,6 +18,7 @@ build:
 	@echo 'Building binary...'
 	@go install ./... 
 
+# Tests needs to run separate, refer logger_test.go
 test-acceptance:
 	@echo 'Running acceptance tests and reporting to coverage.txt...'
 	@go test ./... -v -run TestNewZapLogger 

@@ -6,7 +6,7 @@ package logger_test
 
 // WARNING: Do not run these tests together. Run these tests individually
 // using `make test-acceptance` command.
-// If you run it as a whole, it invokes logger sinks from internal(zap) init functions
+// If you run it as a whole, it invokes logger sinks from internal(zap) init functions and
 // it fails by repeatedly trying to add more syncs, as packages are already imported by main routine.
 
 // XXX: Think about abstracting the sinks to run tests effectively.

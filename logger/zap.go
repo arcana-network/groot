@@ -100,7 +100,7 @@ func (z *zapLogger) Info(msg string, fields Field) {
 	z.Logger.Sugar().Infow(msg, unwrapFields(fields)...)
 }
 
-// Info publishes debug logs. Usually used in dev environments.
+// Debug publishes debug logs. Noisy in prod, usually used in dev environments.
 func (z *zapLogger) Debug(msg string, fields Field) {
 	z.Logger.Sugar().Debugw(msg, unwrapFields(fields)...)
 }
