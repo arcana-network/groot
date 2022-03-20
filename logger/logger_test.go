@@ -32,6 +32,7 @@ func TestNewZapLogger(t *testing.T) {
 	service := "test"
 
 	t.Run(name, func(t *testing.T) {
+		t.Parallel()
 		require.NotPanics(t, func() { logger.NewZapLogger(service) })
 	})
 }
@@ -44,6 +45,7 @@ func TestNewZapLoggerEmptyService(t *testing.T) {
 	expectedErr := "Service cannot be empty"
 
 	t.Run(name, func(t *testing.T) {
+		t.Parallel()
 		require.PanicsWithError(t, expectedErr, func() { logger.NewZapLogger(service) })
 	})
 }
@@ -54,11 +56,12 @@ func TestSinkRepeat(t *testing.T) {
 	name := "sinkRepeat"
 	expectedErr := `register lumberjack sync: sink factory already registered for scheme "lumberjack"`
 
-	// Create a new logger, it registers sinks
+	// Create a new logger, it registers sinks.
 	logger.NewZapLogger(name)
 
 	t.Run(name, func(t *testing.T) {
-		// By creating one more logger from same instance, it panics by registering the same sink
+		t.Parallel()
+		// By creating one more logger from same instance, it panics by registering the same sink.
 		require.PanicsWithError(t, expectedErr, func() { logger.NewZapLogger(name) })
 	})
 }
@@ -77,6 +80,7 @@ func TestFileCreation(t *testing.T) {
 	wantFile := path.Join(home, "/arcana/logs", name, fname)
 
 	t.Run(name, func(t *testing.T) {
+		t.Parallel()
 		log := logger.NewZapLogger(name)
 		log.Info("Test info 1", logger.Field{
 			"test key 1": "test value 1",
@@ -96,7 +100,7 @@ func TestFileCreation(t *testing.T) {
 }
 
 func TestFileContent(t *testing.T) {
-	// t.Parallel()
+	t.Parallel()
 
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -110,6 +114,7 @@ func TestFileContent(t *testing.T) {
 	wantLines := 4
 
 	t.Run(name, func(t *testing.T) {
+		t.Parallel()
 		log := logger.NewZapLogger(name)
 		log.Info("Test info 1", logger.Field{
 			"info key 1": "info value 1",
@@ -155,6 +160,7 @@ func TestFatalLogs(t *testing.T) {
 	wantLines := 5
 
 	t.Run(name, func(t *testing.T) {
+		t.Parallel()
 		// Fatal log does os.exit, let it run in different process and return
 		// back to previous callsite
 		if os.Getenv("FATAL_LOG") == "1" {
@@ -183,10 +189,10 @@ func TestFatalLogs(t *testing.T) {
 			return
 		}
 
-		cmd := exec.Command(os.Args[0], "-test.run=TestFatalLogs")
+		cmd := exec.Command(os.Args[0], "-test.run=TestFatalLogs") //nolint // We have to launch sub process to test os.exit(fatal).
 		cmd.Env = append(os.Environ(), "FATAL_LOG=1")
 		err := cmd.Run()
-		if e, ok := err.(*exec.ExitError); ok && !e.Success() {
+		if e, ok := err.(*exec.ExitError); ok && !e.Success() { // nolint:errorlint // type assert to access Success method
 			f, err := os.Open(wantFile)
 			require.NoError(t, err)
 			fb, err := ioutil.ReadAll(f)
@@ -202,7 +208,7 @@ func TestFatalLogs(t *testing.T) {
 	})
 }
 
-// Helper function to cleanup files created by tests
+// Helper function to cleanup files created by tests.
 func cleanupFile(f string) {
 	os.Remove(f)
 }
