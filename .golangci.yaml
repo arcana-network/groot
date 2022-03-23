@@ -12,3 +12,11 @@ linters:
   disable:
     - ireturn # The abstracted logger exposes only interface functions
     - maligned
+
+issues:
+  exclude-rules:
+    - path: "_test.go"
+      linters:
+        - funlen # In tests function will be def bigger
+        - gochecknoglobals # We can use globals in tests
+        - goconst # We can repeat stuff inside functions to make tests self contained while reading
