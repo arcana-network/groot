@@ -12,6 +12,7 @@ type Logger interface {
 // The semi structured log fields.
 type Field map[string]interface{}
 
+//nolint:ireturn // Return interface to protect zap methods.
 func NewZapLogger(service string) Logger {
 	z, err := newZap(service)
 	if err != nil {
