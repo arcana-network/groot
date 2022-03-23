@@ -1,3 +1,7 @@
+run:
+  skip-dirs:
+    - example/ # Just example with stubs and unused vars
+
 linters-settings:
   funlen:
     lines: 150
