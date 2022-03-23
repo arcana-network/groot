@@ -18,7 +18,8 @@ const (
 	maxBackups = 30
 )
 
-var emptyServiceErr = errors.New("Service cannot be empty") //nolint // Its' okay to have package level errors to avoid multiple err allocations
+//nolint // Global to avoid multiple err allocations, later move to errors.go
+var errEmptyService = errors.New("service cannot be empty")
 
 // zapLogger wraps the zap logging library to satisfy Logger interface.
 type zapLogger struct {
@@ -35,7 +36,7 @@ func (lumberJackSink) Sync() error { return nil }
 //nolint:ireturn, exhaustivestruct // Return interface to protect zap methods.
 func newZap(service string) (Logger, error) {
 	if service == "" {
-		return nil, emptyServiceErr
+		return nil, errEmptyService
 	}
 
 	var baseLocation string
