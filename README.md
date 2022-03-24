@@ -18,7 +18,7 @@ You mostly don't have to worry about format of logs, which library we use behind
 
 # Usage
 - Create a logger instance and pass it around to packages. This is a better pattern as it avoids globals. Though this might not be possible if the code is not structured to inject dependencies 
-and heavily rely on globals, for this purpose groot provides a singleton logger
+and heavily rely on globals, for this purpose groot provides a global/singleton logger
 
 # Todo
 - [ ] Implement log rotation and retention

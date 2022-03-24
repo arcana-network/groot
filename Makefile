@@ -21,9 +21,15 @@ build:
 # Tests needs to run separate, refer logger_test.go
 test-acceptance:
 	@echo 'Running acceptance tests and reporting to coverage.txt...'
-	@go test ./... -v -run TestNewZapLogger 
+	@go test ./... -v -run TestNewZapLogger
+	@go test ./... -v -run TestGlobalNewZapLogger
 	@go test ./... -v -run TestNewZapLoggerEmptyService
+	@go test ./... -v -run TestNewGlobalZapLoggerEmptyService
 	@go test ./... -v -run TestSinkRepeat
+	@go test ./... -v -run TestGlobalSinkRepeat
 	@go test ./... -v -run TestFileCreation
+	@go test ./... -v -run TestGlobalFileCreation
 	@go test ./... -v -run TestFileContent
+	@go test ./... -v -run TestGlobalFileContent
 	@go test ./... -v -run TestFatalLogs
+	@go test ./... -v -run TestGlobalFatalLogs
