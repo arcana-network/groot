@@ -33,3 +33,4 @@ test-acceptance:
 	@go test ./... -v -run TestGlobalFileContent
 	@go test ./... -v -run TestFatalLogs
 	@go test ./... -v -run TestGlobalFatalLogs
+	@go test ./... -v -run TestPanicLogs
