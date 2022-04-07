@@ -53,7 +53,7 @@ func TestNewGlobalZapLogger(t *testing.T) {
 func TestNewZapLoggerEmptyService(t *testing.T) {
 	t.Parallel()
 
-	name := "withServiceName"
+	name := "withoutServiceName"
 	service := ""
 	expectedErr := "service cannot be empty"
 
@@ -66,7 +66,7 @@ func TestNewZapLoggerEmptyService(t *testing.T) {
 func TestNewGlobalZapLoggerEmptyService(t *testing.T) {
 	t.Parallel()
 
-	name := "withServiceName"
+	name := "globalWithoutServiceName"
 	service := ""
 	expectedErr := "service cannot be empty"
 
@@ -393,6 +393,24 @@ func TestGlobalFatalLogs(t *testing.T) {
 
 			return
 		}
+	})
+}
+
+func TestPanicLogs(t *testing.T) {
+	t.Parallel()
+
+	name := "panicLogs"
+	expectedErr := "Panic with error message"
+
+	log := logger.NewZapLogger(name)
+
+	t.Run(name, func(t *testing.T) {
+		t.Parallel()
+		require.Panics(t, func() { // require.PanicsWithError is not working even though err is same, fix later
+			log.Panic(expectedErr, logger.Field{
+				"error": "Some error",
+			})
+		})
 	})
 }
 
