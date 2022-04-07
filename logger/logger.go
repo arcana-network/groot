@@ -1,6 +1,8 @@
 package logger
 
-import "sync"
+import (
+	"sync"
+)
 
 // Logger exposes all log functions.
 type Logger interface {
@@ -9,6 +11,7 @@ type Logger interface {
 	Error(msg string, fields Field)
 	Warn(msg string, fields Field)
 	Fatal(msg string, fields Field)
+	Panic(msg string, fields Field)
 }
 
 //nolint

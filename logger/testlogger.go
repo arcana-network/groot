@@ -42,6 +42,11 @@ func (t *TestLogger) Fatal(msg string, fields Field) {
 	fmt.Fprintln(t.b, msg, fields)
 }
 
+// Panic publishes the log and stops the execution of goroutine.
+func (t *TestLogger) Panic(msg string, fields Field) {
+	fmt.Fprintln(t.b, msg, fields)
+}
+
 // GetLogs is a helper function to get in-memory logs.
 func (t *TestLogger) GetLogs() string {
 	return t.b.String()

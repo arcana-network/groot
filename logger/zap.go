@@ -122,6 +122,11 @@ func (z *zapLogger) Fatal(msg string, fields Field) {
 	z.Logger.Sugar().Fatalw(msg, unwrapFields(fields)...)
 }
 
+// Panic publishes the log and stops the execution of goroutine.
+func (z *zapLogger) Panic(msg string, fields Field) {
+	z.Logger.Sugar().Panicw(msg, unwrapFields(fields)...)
+}
+
 // unwrapFields is a helper function.
 func unwrapFields(fields Field) (unwrapped []interface{}) {
 	for k, v := range fields {
